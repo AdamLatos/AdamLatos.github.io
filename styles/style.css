@@ -13,8 +13,17 @@ body {
 }
 
 h1 {
+  margin: 0 auto;
+  padding: 0 20 0 0;
   font-size: 60px;
   text-align: center;
+  text-shadow: 1px 1px 3px rgb(81, 100, 87);
+}
+
+h2 {
+    padding: 0;
+    font-size: 40px;
+    text-align: center;
 }
 
 p {
@@ -23,12 +32,12 @@ p {
   letter-spacing: 1px;
   width: 900px;
   border: 1px solid black;
+  padding: 0 0 20px 20px;
 }
 
 img {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   width: 40%;
 }
 
