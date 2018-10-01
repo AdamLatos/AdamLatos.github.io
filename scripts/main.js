@@ -1,12 +1,16 @@
 var myImage = document.querySelector('img');
 
 myImage.onclick = function() {
-    var mySrc = myImage.getAttribute('src');
-    if(mySrc === 'images/bear1.gif') {
-        myImage.setAttribute('src','images/bear3.gif');
-    } else  {
-        myImage.setAttribute('src','images/bear1.gif');
+    if(typeof this.counter == 'undefined') {
+        this.counter = 1;
     }
+    ++this.counter;
+    //var mySrc = myImage.getAttribute('src');
+    if(this.counter == 10) {
+        this.counter = 1;
+    }
+    myImage.setAttribute('src','images/bear' + this.counter + '.gif');
+
 }
 
 var myButton = document.querySelector('button');
