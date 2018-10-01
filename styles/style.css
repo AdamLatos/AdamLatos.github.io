@@ -5,31 +5,48 @@ html {
 }
 
 body {
-  /*width: 1000px;*/
+  overflow: hidden;
+  box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   margin: 0 auto;
   background-color: rgb(143, 177, 153);
-  padding: 0 20px 20px 20px;
-  border: 5px solid black;
+  padding: 0;
+  border: 4px solid rgb(14, 22, 10);
 }
 
 article {
   margin: 0 auto;
 }
 
-main {
-  margin: 0 auto;
+nav, main, aside {
+    box-sizing: border-box;
+    margin: 0 auto;
+    border: 2px solid rgb(33, 54, 39);
 }
 
+nav, aside{
+    background-color: rgb(122, 150, 130);
+    flex: 1;
+}
+
+main{   
+    overflow-y: auto;
+    min-height: 0;
+    max-height: 1000px;
+    flex: 3;
+    padding: 10px;
+}
 
 h1 {
     display: block;
-  margin: 0 auto;
-  padding: 0 20 0 0;
-  font-size: 60px;
-  text-align: center;
-  text-shadow: 1px 1px 3px rgb(81, 100, 87);
+    margin: 0 auto;
+    padding: 0px;
+    font-size: 60px;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgb(81, 100, 87);
+    border: 2px solid rgb(33, 54, 39);
+    background-color: rgb(122, 150, 130);
 }
 
 h2 {
@@ -43,8 +60,8 @@ p {
   font-size: 16px;    
   line-height: 2;
   letter-spacing: 1px;
-  width: 900px;
-  padding: 0 0 5px 5px;
+  width: 90%;
+  padding: 0;
   border-style: none
 }
 
@@ -56,3 +73,12 @@ img {
     object-fit: contain
 }
 
+.wrapper {
+    display: flex;
+  }
+
+canvas {
+    margin: 0 auto;
+    border: 1px solid #000000;
+    display: block;
+}
