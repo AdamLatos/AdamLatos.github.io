@@ -1,49 +1,93 @@
+var canvas = document.getElementById('myCanvas')
+var ctx = canvas.getContext('2d');
+ctx.translate(0,canvas.height); 
+ctx.scale(1,-1);
 
+var player = {
+    x: 40,
+    y: 80,
+    dx: 0,
+    dy: -2,
+    size: 40,
+    color: "black",
+    draw: function() {
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.size, this.size);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
 
-var sun = new Image();
-var moon = new Image();
-var earth = new Image();
+var floor = {
+    color: "gray",
+    draw: function() {
+        ctx.beginPath();
+        ctx.rect(0, 0, 800, 40);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+var controls = {
+    rightPressed: false,
+    leftPressed: false,
+    upPressed: false
+}
+
 function init() {
-  sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
-  moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
-  earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
-  window.requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw);
+}
+
+function keyDownHandler(e) {
+    if(e.keyCode == 39) {
+        controls.rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        controls.leftPressed = true;
+    }
+    else if(e.keyCode == 38) {
+        controls.upPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if(e.keyCode == 39) {
+        controls.rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        controls.leftPressed = false;
+    }
+    else if(e.keyCode == 38) {
+        controls.upPressed = false;
+    }
 }
 
 function draw() {
-  var ctx = document.getElementById('canvas').getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    floor.draw();
+    player.draw();
+    if(player.y + player.dy > canvas.height || player.y + player.dy < 40) {
+        player.dy = 0;
+    } else {
+        player.dy += -2;
+    }
+    if(controls.rightPressed){
+        player.x += 8;
+    }
+    if(controls.leftPressed){
+        player.x -= 8;
+    }
+    if(controls.upPressed && player.y <= 40){
+        player.dy += 25;
+    }
+    player.x += player.dx;
+    player.y += player.dy;
 
-  ctx.globalCompositeOperation = 'destination-over';
-  ctx.clearRect(0, 0, 300, 300); // clear canvas
-
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-  ctx.strokeStyle = 'rgba(0, 153, 255, 0.4)';
-  ctx.save();
-  ctx.translate(150, 150);
-
-  // Earth
-  var time = new Date();
-  ctx.rotate(((2 * Math.PI) / 60) * time.getSeconds() + ((2 * Math.PI) / 60000) * time.getMilliseconds());
-  ctx.translate(105, 0);
-  ctx.fillRect(0, -12, 50, 24); // Shadow
-  ctx.drawImage(earth, -12, -12);
-
-  // Moon
-  ctx.save();
-  ctx.rotate(((2 * Math.PI) / 6) * time.getSeconds() + ((2 * Math.PI) / 6000) * time.getMilliseconds());
-  ctx.translate(0, 28.5);
-  ctx.drawImage(moon, -3.5, -3.5);
-  ctx.restore();
-
-  ctx.restore();
-  
-  ctx.beginPath();
-  ctx.arc(150, 150, 105, 0, Math.PI * 2, false); // Earth orbit
-  ctx.stroke();
- 
-  ctx.drawImage(sun, 0, 0, 300, 300);
-
-  window.requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw);
 }
 
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
 init();
