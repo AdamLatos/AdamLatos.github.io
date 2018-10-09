@@ -11,6 +11,16 @@ var player = {
     size: 40,
     color: "black",
     draw: function() {
+        if(this.x < 0){
+            this.x = 0;
+        } else if (this.x + this.size > canvas.width) {
+            this.x = canvas.width - this.size
+        }
+        if(this.y < 40){
+            this.y = 40;
+        } else if (this.y + this.size > canvas.height) {
+            this.y = canvas.height - this.size
+        }
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.size, this.size);
         ctx.closePath();
@@ -68,22 +78,35 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     floor.draw();
     player.draw();
-    if(player.y + player.dy > canvas.height || player.y + player.dy < 40) {
-        player.dy = 0;
-    } else {
-        player.dy += -2;
+
+    if (player.y > 40) {
+        player.dy += -1;
     }
+
     if(controls.rightPressed){
-        player.x += 8;
+        player.x += 4;
+        player.dx += 2;
     }
     if(controls.leftPressed){
-        player.x -= 8;
+        player.x -= 4;
+        player.dx -= 2;
     }
-    if(controls.upPressed && player.y <= 40){
+    if(controls.upPressed && player.y <= 45){
         player.dy += 25;
     }
     player.x += player.dx;
     player.y += player.dy;
+    if(player.dx < 0) {
+        player.dx += 1;
+    } else if(player.dx > 0) {
+        player.dx -= 1;
+    }
+
+    if(player.dx <= -10) {
+        player.dx = -10;
+    } else if(player.dx >= 10) {
+        player.dx = 10;
+    }
 
     window.requestAnimationFrame(draw);
 }
