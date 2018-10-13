@@ -3,24 +3,18 @@ var ctx = canvas.getContext('2d');
 ctx.translate(0,canvas.height); 
 ctx.scale(1,-1);
 
+function init() {
+    window.requestAnimationFrame(draw);
+}
+
 var player = {
     x: 40,
     y: 80,
     dx: 0,
-    dy: -2,
+    dy: 0,
     size: 40,
     color: "black",
-    draw: function() {
-        if(this.x < 0){
-            this.x = 0;
-        } else if (this.x + this.size > canvas.width) {
-            this.x = canvas.width - this.size
-        }
-        if(this.y < 40){
-            this.y = 40;
-        } else if (this.y + this.size > canvas.height) {
-            this.y = canvas.height - this.size
-        }
+    draw: function () {
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.size, this.size);
         ctx.closePath();
@@ -28,6 +22,7 @@ var player = {
         ctx.fill();
     }
 }
+
 
 var floor = {
     color: "gray",
@@ -43,34 +38,64 @@ var floor = {
 var controls = {
     rightPressed: false,
     leftPressed: false,
-    upPressed: false
+    upPressed: false,
+    downPressed: false,
+    spacePressed: false
 }
 
-function init() {
-    window.requestAnimationFrame(draw);
-}
+var keyboardHelper = { left: 37, up: 38, right: 39, down: 40, space: 32};
 
 function keyDownHandler(e) {
-    if(e.keyCode == 39) {
+    if(e.keyCode == keyboardHelper.right) {
         controls.rightPressed = true;
     }
-    else if(e.keyCode == 37) {
+    else if(e.keyCode == keyboardHelper.left) {
         controls.leftPressed = true;
     }
-    else if(e.keyCode == 38) {
+    else if(e.keyCode == keyboardHelper.up) {
         controls.upPressed = true;
+    }
+    else if(e.keyCode == keyboardHelper.down) {
+        controls.downPressed = true;
+    }
+    else if(e.keyCode == keyboardHelper.space) {
+        controls.spacePressed = true;
     }
 }
 
 function keyUpHandler(e) {
-    if(e.keyCode == 39) {
+    if(e.keyCode == keyboardHelper.right) {
         controls.rightPressed = false;
     }
-    else if(e.keyCode == 37) {
+    else if(e.keyCode == keyboardHelper.left) {
         controls.leftPressed = false;
     }
-    else if(e.keyCode == 38) {
+    else if(e.keyCode == keyboardHelper.up) {
         controls.upPressed = false;
+    }
+    else if(e.keyCode == keyboardHelper.down) {
+        controls.downPressed = false;
+    }
+    else if(e.keyCode == keyboardHelper.space) {
+        controls.spacePressed = false;
+    }
+}
+
+function checkCollision() {
+    if(player.y > 40){
+        player.dy -= 2;
+    } else {
+        player.dy = 0;
+    }
+    if(player.x < 0){
+        player.x = 0;
+    } else if (player.x + player.size > canvas.width) {
+        player.x = canvas.width - player.size
+    }
+    if(player.y < 40){
+        player.y = 40;
+    } else if (player.y + player.size > canvas.height) {
+        player.y = canvas.height - player.size
     }
 }
 
@@ -79,9 +104,9 @@ function draw() {
     floor.draw();
     player.draw();
 
-    if (player.y > 40) {
-        player.dy += -1;
-    }
+
+
+
 
     if(controls.rightPressed){
         player.x += 4;
@@ -91,11 +116,10 @@ function draw() {
         player.x -= 4;
         player.dx -= 2;
     }
-    if(controls.upPressed && player.y <= 45){
+    if(controls.upPressed && player.y == 40){
         player.dy += 25;
     }
-    player.x += player.dx;
-    player.y += player.dy;
+
     if(player.dx < 0) {
         player.dx += 1;
     } else if(player.dx > 0) {
@@ -108,9 +132,16 @@ function draw() {
         player.dx = 10;
     }
 
+    player.x += player.dx;
+    player.y += player.dy;
+
+    checkCollision();
+
     window.requestAnimationFrame(draw);
 }
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-init();
+$( document ).ready(function() {
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+    init();
+});
