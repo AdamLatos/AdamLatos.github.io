@@ -213,13 +213,13 @@ function movePlayer() {
     }
 
     // right collision
-    if(upRight == 1){
+    if(upRight == 1 || downRight == 1){
         player.dx = 0;
         newX = X1*tilemap.tsize;
     }
 
     // left collision
-    if(upLeft == 1){
+    if(upLeft == 1 || downLeft == 1){
         player.dx = 0;
         newX = X2*tilemap.tsize;
     }
@@ -231,10 +231,10 @@ function movePlayer() {
     X2 = Math.ceil(newX2/tilemap.tsize);
     Y1 = Math.floor(newY2/tilemap.tsize);
     Y2 = Math.ceil(newY2/tilemap.tsize);
-    var upLeft = tilemap.getTile(0,Y1,X1);
-    var upRight = tilemap.getTile(0,Y1,X2);
-    var downLeft = tilemap.getTile(0,Y2,X1);
-    var downRight = tilemap.getTile(0,Y2,X2);
+    upLeft = tilemap.getTile(0,Y1,X1);
+    upRight = tilemap.getTile(0,Y1,X2);
+    downLeft = tilemap.getTile(0,Y2,X1);
+    downRight = tilemap.getTile(0,Y2,X2);
 
     // gravity
     if(controls.upPressed==0){
@@ -245,7 +245,7 @@ function movePlayer() {
         player.dy = 0;
         newY2 = Y1*tilemap.tsize;
         if(controls.upPressed && player.jump==0){
-            player.dy = -20;
+            player.dy = -21;
             player.jump = 1;
         }
     } else {
