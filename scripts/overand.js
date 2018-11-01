@@ -7,6 +7,8 @@ var ctxtext = canvas.getContext('2d');
 
 function init() {
     window.requestAnimationFrame(draw);
+    player.img = new Image(48,16*48);
+    player.img.src = "images/sprites/bear.png";
 }
 
 var player = {
@@ -16,12 +18,30 @@ var player = {
     dy: 0,
     size: 48,
     color: "black",
+    img: 0,
+    direction: 1,
+    state: 2,
+    //draw: function () {
+    //    ctx.beginPath();
+    //    ctx.rect(this.x, this.y, this.size, this.size);
+    //    ctx.closePath();
+    //    ctx.fillStyle = this.color;
+    //   ctx.fill();
+    //},
     draw: function () {
-        ctx.beginPath();
-        ctx.rect(this.x, this.y, this.size, this.size);
-        ctx.closePath();
-        ctx.fillStyle = this.color;
-        ctx.fill();
+        if(this.dx<0){
+            this.direction = 0;
+            this.state += 1;
+        }
+        if(this.dx>0){
+            this.direction = 1;
+            this.state += 1;
+        }
+        if(this.dx==0){
+            this.state = 13 - 11*this.direction;
+        }
+        this.state = this.state%16;
+        ctx.drawImage(this.img,this.state*48,this.direction*48,48,48,this.x-4,this.y,this.size+8,this.size+8);
     },
     win: 0,
     reset: function () {
@@ -32,18 +52,6 @@ var player = {
         this.size = 48,
         this.color = "black",
         this.win = 0;
-    }
-}
-
-
-var floor = {
-    color: "gray",
-    draw: function() {
-        ctx.beginPath();
-        ctx.rect(0, 600, 800, 40);
-        ctx.closePath();
-        ctx.fillStyle = this.color;
-        ctx.fill();
     }
 }
 
