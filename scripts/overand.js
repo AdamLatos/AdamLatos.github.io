@@ -267,12 +267,23 @@ function movePlayer() {
     player.y = newY2;
 
     if(win == 1){
-        ctx.font = "100px Arial";
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = 'Black';
+        ctx.beginPath();
+        ctx.rect(25,40,590,180);
+        ctx.closePath();
+        ctx.fillStyle = "grey";
+        ctx.fill();
+        ctx.stroke();
+        ctx.font = "bold 100px Arial";
         ctx.fillStyle = "Green";
         ctx.textAlign="center"; 
         ctx.fillText("YOU WON!",320,150);
-        ctx.font = "20px Arial"
+        ctx.strokeText("YOU WON!",320,150);
+        ctx.font = "bold 20px Arial"
+        ctx.fillStyle = "black";
         ctx.fillText("to restart press space",320,200);
+
         return 1;
     }
     return 0;
