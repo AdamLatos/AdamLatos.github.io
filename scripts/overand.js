@@ -21,6 +21,7 @@ var player = {
     img: 0,
     direction: 1,
     state: 2,
+    jump: 0,
     //draw: function () {
     //    ctx.beginPath();
     //    ctx.rect(this.x, this.y, this.size, this.size);
@@ -168,6 +169,28 @@ function keyUpHandler(e) {
 
 function movePlayer() {
 
+    // right/left movement
+    if(controls.rightPressed){
+        //player.dx = 4;
+        player.dx += 3;
+    }
+    if(controls.leftPressed){
+        //player.dx = -4;
+        player.dx -= 3;
+    }
+
+    if(player.dx < 0) {
+        player.dx += 1;
+    } else if(player.dx > 0) {
+        player.dx -= 1;
+    }
+
+    if(player.dx <= -6) {
+        player.dx = -6;
+    } else if(player.dx >= 6) {
+        player.dx = 6;
+    }
+
     var newX = player.x + player.dx;
     var newY = player.y //+ player.dy;
 
@@ -201,65 +224,47 @@ function movePlayer() {
         newX = X2*tilemap.tsize;
     }
 
-    var newY = player.y + player.dy;
+    var newX2 = player.x //+ player.dx;
+    var newY2 = player.y + player.dy;
 
-    X1 = Math.floor(newX/tilemap.tsize);
-    X2 = Math.ceil(newX/tilemap.tsize);
-    Y1 = Math.floor(newY/tilemap.tsize);
-    Y2 = Math.ceil(newY/tilemap.tsize);
+    X1 = Math.floor(newX2/tilemap.tsize);
+    X2 = Math.ceil(newX2/tilemap.tsize);
+    Y1 = Math.floor(newY2/tilemap.tsize);
+    Y2 = Math.ceil(newY2/tilemap.tsize);
     var upLeft = tilemap.getTile(0,Y1,X1);
     var upRight = tilemap.getTile(0,Y1,X2);
     var downLeft = tilemap.getTile(0,Y2,X1);
     var downRight = tilemap.getTile(0,Y2,X2);
 
     // gravity
+    if(controls.upPressed==0){
+        player.jump=0;
+    }
+
     if(downLeft == 1 || downRight == 1){
         player.dy = 0;
-        newY = Y1*tilemap.tsize;
-        if(controls.upPressed){
-            player.dy = -25;
+        newY2 = Y1*tilemap.tsize;
+        if(controls.upPressed && player.jump==0){
+            player.dy = -20;
+            player.jump = 1;
         }
     } else {
-        player.dy += 2;
+        player.dy += 1.5;
     }
 
     // head collision
     if(upLeft == 1 || upRight == 1){
         player.dy = 2;
-        newY = Y2*tilemap.tsize;
+        newY2 = Y2*tilemap.tsize;
     }
-
-
 
     if(newX < 0){
         player.dx = 0;
         newX = 0;
     }
 
-    // right/left movement
-    if(controls.rightPressed){
-        player.x += 4;
-        player.dx += 2;
-    }
-    if(controls.leftPressed){
-        player.x -= 4;
-        player.dx -= 2;
-    }
-
-    if(player.dx < 0) {
-        player.dx += 1;
-    } else if(player.dx > 0) {
-        player.dx -= 1;
-    }
-
-    if(player.dx <= -10) {
-        player.dx = -10;
-    } else if(player.dx >= 10) {
-        player.dx = 10;
-    }
-
     player.x = newX;
-    player.y = newY;
+    player.y = newY2;
 
     if(win == 1){
         ctx.font = "100px Arial";
