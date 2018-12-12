@@ -1,13 +1,15 @@
 const shoal = [];
+let button;
+let enableAlignment = 0;
 
 class Fish {
   constructor(x,y) {
     this.loc = createVector(x,y);
-    this.vel = createVector(0,2);
+    this.vel = createVector(random(-2,2),random(-2,2));
     this.acc = createVector(0,0);
     this.maxVel = 4;
     this.maxForce = 0.4;
-    this.area = 50;
+    this.influenceArea = 50;
   }
 
   show() {
@@ -22,7 +24,7 @@ class Fish {
   setAcc() {
     let attraction = createVector(0,0);
     for (fish of shoal) {
-      if (this.loc.dist(fish.loc) < this.area) {
+      if (this.loc.dist(fish.loc) < this.influenceArea) {
         attraction.add(fish.loc.sub(this.loc));
       }
       attraction.limit(this.maxForce);
@@ -30,13 +32,46 @@ class Fish {
     }
   }
 
+  cohesion() {
+    let target = createVector(0,0);
+    for (fish of shoal) {
+      if (this.loc.dist(fish.loc) < this.influenceArea) {
+        target.add(fish.loc.sub(this.loc));
+      }
+    }
+    target.normalize();
+    return target;
+  }
+
+  alignment() {
+    let target = createVector(0,0);
+    for (fish of shoal) {
+      if (this.loc.dist(fish.loc) < this.influenceArea) {
+        target.add(fish.vel);
+      }
+    }
+    target.normalize();
+    return target;
+  }
+
+  separation() {
+
+  }
+
   move() {
+    
     this.loc.add(this.vel);
     this.vel.add(this.acc);
     this.vel.limit(this.maxVel);
 
+    //this.acc.set(0.3*random(-1,1),0.3*random(-1,1))
+    //this.acc.add(this.cohesion());
+    //this.acc.set(0,0);
     this.acc.set(0.3*random(-1,1),0.3*random(-1,1))
-    //this.setAcc();
+    if(enableAlignment) {
+      this.acc.set(0.1*random(-1,1),0.1*random(-1,1))
+      this.acc.add(this.alignment().mult(0.2));
+    }
 
     if(this.loc.x > width+20) {
       this.loc.x = -20;
@@ -59,6 +94,10 @@ function setup() {
   for (let i=0; i<10; i++) {
     shoal.push(new Fish(random(0,width), random(0,height)));
   }
+
+  button = createButton('enableAlignment');
+  button.position(19, 19);
+  button.mousePressed(function() {enableAlignment=1; button.hide();});
 }
 
 function draw() {
