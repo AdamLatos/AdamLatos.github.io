@@ -6,7 +6,8 @@ class Fish {
     this.vel = createVector(0,2);
     this.acc = createVector(0,0);
     this.maxVel = 4;
-    this.maxForce = 0.04;
+    this.maxForce = 0.4;
+    this.area = 50;
   }
 
   show() {
@@ -18,13 +19,24 @@ class Fish {
     pop();
   }
 
+  setAcc() {
+    let attraction = createVector(0,0);
+    for (fish of shoal) {
+      if (this.loc.dist(fish.loc) < this.area) {
+        attraction.add(fish.loc.sub(this.loc));
+      }
+      attraction.limit(this.maxForce);
+      this.acc.set(attraction);
+    }
+  }
+
   move() {
     this.loc.add(this.vel);
     this.vel.add(this.acc);
     this.vel.limit(this.maxVel);
 
-
     this.acc.set(0.3*random(-1,1),0.3*random(-1,1))
+    //this.setAcc();
 
     if(this.loc.x > width+20) {
       this.loc.x = -20;
@@ -45,7 +57,7 @@ function setup() {
   createCanvas(640, 480);
   fish = new Fish(width/2, height/2);
   for (let i=0; i<10; i++) {
-    shoal.push(new Fish(random(width/4,width/2), random(height/4,height/2)));
+    shoal.push(new Fish(random(0,width), random(0,height)));
   }
 }
 
