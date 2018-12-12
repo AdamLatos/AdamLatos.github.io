@@ -1,6 +1,8 @@
 const shoal = [];
 let button;
 let enableAlignment = 0;
+let height = window.innerHeight;
+let width = window.innerWidth
 
 class Fish {
   constructor(x,y) {
@@ -89,9 +91,9 @@ class Fish {
 }
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(width, height);
   fish = new Fish(width/2, height/2);
-  for (let i=0; i<10; i++) {
+  for (let i=0; i<floor(width*height/15000); i++) {
     shoal.push(new Fish(random(0,width), random(0,height)));
   }
 
